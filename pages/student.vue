@@ -1,5 +1,5 @@
 <template>
-<main class="flex justify-center bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzKsE576d4oxQtqJT-Jw4ErWwLtafJPzP6mE3GkenkNHDC_QlkJL-GWZkeKnzvjXByHhE&usqp=CAU')] ">
+<main class="flex justify-center bg-[url('https://png.pngtree.com/background/20210711/original/pngtree-creative-synthetic-city-business-elite-silhouette-background-picture-image_1065175.jpg')] ">
     <div>
         <div>
             <form  @submit="customSubmit" @reset="customEdit" class="bg-white-100  rounded-lg border-none px-12 ">
