@@ -1,9 +1,9 @@
 <template>
-<main>
+<main class="flex justify-center bg-[url('https://png.pngtree.com/background/20210709/original/pngtree-blue-high-end-atmosphere-technology-future-picture-image_939127.jpg')] ">
     <div>
         <div>
-            <form  class="bg-blue-100  rounded-lg border-2 px-12 ">
-                <table >
+            <form  @submit="customSubmit" @reset="customEdit" class="bg-blue-100  rounded-lg border-2 px-12 ">
+                <table class="grid  content-center">
                     <h2 class="text-teal-900  text-center font-bold text-4xl pt-6">Student Registration</h2>
                     <hr />
                     <br />
@@ -24,7 +24,8 @@
                 </table>
             </form>
         </div>
-          <div >
+        <br>
+        <div >
             <table class="list bg-gray-100">
                 <h1 class="text-teal-900 text-xl font-bold pt-1">DataBase table:</h1>
                 <tr>
@@ -47,7 +48,6 @@
             </table>
         </div>
     </div>
-
 </main>
 </template>
 
@@ -56,9 +56,23 @@ import {
     defineComponent
 } from '@vue/composition-api'
 
-export default defineComponent({
-    setup() {
 
+    export default {
+    data() {
+        return {
+            // formshow: false,
+            isEdit: false,
+            indexEdit: -1,
+            myarr: [],
+            user: {
+                id: 0,
+                firstname: '',
+                lastname: '',
+                email: '',
+                number: '',
+            },
+        };
     },
-})
+
+    }
 </script>
