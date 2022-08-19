@@ -50,14 +50,9 @@
     </div>
 </main>
 </template>
-
 <script>
-import {
-    defineComponent
-} from '@vue/composition-api'
-
-
-    export default {
+//import { isThisExpression } from '@babel/types';
+export default {
     data() {
         return {
             // formshow: false,
@@ -73,6 +68,35 @@ import {
             },
         };
     },
-
+    methods: {
+        customSubmit(event) {
+            event.preventDefault();
+            if (this.isEdit == true) {
+                this.myarr[this.indexEdit] = this.user;
+                this.isEdit = false;
+                this.indexEdit = -1;
+            } else {
+                this.myarr.push(this.user);
+            }
+            this.user = {
+                id: 0,
+                firstname: '',
+                lastname: '',
+                email: '',
+                number: '',
+            };
+        },
+        customDelete(index) {
+            this.myarr.splice(index, 1);
+        },
+        customEdit(index) {
+            this.user.firstname = this.myarr[index].firstname;
+            this.user.lastname = this.myarr[index].lastname;
+            this.user.email = this.myarr[index].email;
+            this.user.number = this.myarr[index].number;
+            this.isEdit = true;
+            this.indexEdit = index;
+        },
     }
+}
 </script>
