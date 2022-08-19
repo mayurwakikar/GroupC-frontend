@@ -1,19 +1,26 @@
 <template>
-    <main>
-        <div>
+<main>
     <div>
+        <div>
+            <form>
+                <table>
+                    
+                </table>
+            </form>
         </div>
-        <div></div>
-        
+    </div>
 
-    </main>
+</main>
 </template>
+
 <script>
-import { defineComponent } from '@vue/composition-api'
+import {
+    defineComponent
+} from '@vue/composition-api'
 
 export default defineComponent({
     setup() {
-        
+
     },
 })
 </script>
