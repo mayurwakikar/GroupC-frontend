@@ -16,7 +16,7 @@
                     <label class="font-bold text-xl pt-3" for="email">Email Id: </label>
                     <input type="email" class="  border-black rounded-lg border-2"  v-model="email" id="email" name="email" placeholder="Enter your Email id" />
                     <label class="font-bold text-xl pt-3" for="mobile">Phone Number: </label>
-                    <input type="text" class="  border-black rounded-lg border-2"  v-model="mobile" id="mobile" name="mobile" placeholder="Enter your number" />
+                    <input type="number" class="  border-black rounded-lg border-2"  v-model="mobile" id="mobile" name="mobile" placeholder="Enter your number" />
                     <label class="font-bold text-xl pt-3" for="address">Address: </label>
                     <input type="text" class="  border-black rounded-lg border-2" id="address" v-model="address"  name="address" placeholder="Enter your Address" />
                     <!-- <div class="pt-3"> -->
