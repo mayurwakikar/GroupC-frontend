@@ -8,8 +8,8 @@
             <table>
                 <h2 class="text-teal-900 text-xl font-bold pt-6">Lets Add a Book To Libaray</h2>
                 <hr />
-                <!-- <label class="pt-10 py-10 mt-4" for="id">Book Id</label><br />
-                <input type="text"  id="id" name="id" placeholder="" v-model="book_id"  /><br /><br /> -->
+                <label class="pt-10 py-10 mt-4" for="id">Book Id</label><br />
+                <input type="text"  id="id" name="id" placeholder="" v-model="book_id"  /><br /><br />
                 <label for="author">Book Name</label><br />
                 <input type="text"  id="name" name="name" placeholder="" v-model="book_name"/><br /><br />
                 <label for="author">Book Author</label><br />
@@ -53,10 +53,10 @@
                     <img src="{{item.Image}}" alt="" srcset="">
                 </td> -->
                 <td class="px-4 border-black rounded-lg border-4">{{item.Action}}
-                    <button class="mx-3 rounded-lg bg-red-600 hover:bg-red-700 text-white w-20" type="submit" @click="userDelete(index)">
+                    <button class="mx-3 rounded-lg bg-red-600 hover:bg-red-700 text-white w-20"  @click="deletespecificuser(item.book_id)">
                         Delete
                     </button>
-                    <button class="mx-3 rounded-lg bg-green-600 hover:bg-green-600 text-white w-20" @click="onEdit(index)">
+            <button class="mx-3 rounded-lg bg-green-600 hover:bg-green-600 text-white w-20" @click="editBook(item)">
                         Edit
                     </button>
                      
@@ -170,5 +170,39 @@ async function formSubmit() {
   });
 //   getalldata();
 }
+//Delete Api
+async function deletespecificuser(book_id) {
+  await $fetch("http://localhost:3003/book/" + book_id, {
+    method: "DELETE",
+  });
+  getalldata();
+}
 
+async function editBook(book) {
+  (this.book_id = book.book_id),
+    (this.book_name = book.book_name),
+    (this.book_author= book.book_author),
+    (this.book_image = book.book_image),
+    (this.book_price = book.book_price),
+    (this.book_isbn = book.book_isbn);
+}
+async function editBookApi(book) {
+  // const response = await fetch("http://localhost:3001/user/" + this.user_id, {
+  const response = await $fetch("http://localhost:3003/book/" + book_id.value, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      book_id: book_id.value,
+      book_name: book_name.value,
+      book_author: book_author.value,
+      book_image: book_image.value,
+      book_price: book_price.value,
+      book_isbn: book_isbn.value,
+    }),
+  });
+  console.log(response);
+  getalldata();
+}
 </script>
