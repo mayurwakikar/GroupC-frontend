@@ -204,6 +204,16 @@ const emp_dept = ref("");
 
 let state = reactive({
   items: [],
+
+  form: {
+    emp_id: "",
+    emp_name: "",
+    emp_gender: "",
+    emp_address: "",
+    emp_contact: "",
+    emp_salary: "",
+    emp_dept: "",
+  },
 });
 
 getAllEmp();
