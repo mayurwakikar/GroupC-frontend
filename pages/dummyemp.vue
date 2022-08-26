@@ -22,17 +22,16 @@
       </button>
     </div>
 
-    <form class="text-center" method="POST">
+    <form class="text-center" @submit="formSubmit">
       <!-- <label for="fname" class="font-semibold p-1">EmpId:</label> -->
-      <input
+      <!-- <input
         type="number"
         id="eid"
         name="eid"
         placeholder="Enter the employee id"
         class="border-2 border-black m-1"
         v-model="emp_id"
-        v-show="show"
-      /><br />
+      /><br /> -->
       <label for="fname" class="font-semibold p-1">Name:</label>
       <input
         type="text"
@@ -40,14 +39,14 @@
         name="fname"
         placeholder="Enter the name"
         class="border-2 border-black m-1"
-        v-model="emp_name"
+        v-model="formData.emp_name"
       /><br />
       <label class="font-semibold p-1">Gender:</label>
       <input
         type="radio"
         id="male"
         name="gender"
-        v-model="emp_gender"
+        v-model="formData.emp_gender"
         value="male"
         class="m-1"
       />
@@ -58,7 +57,7 @@
         name="gender"
         value="female"
         class="m-1"
-        v-model="emp_gender"
+        v-model="formData.emp_gender"
       />
       <label for="female">Female</label>
       <br />
@@ -69,7 +68,7 @@
         name="address"
         placeholder="Enter the address"
         class="border-2 border-black m-1"
-        v-model="emp_address"
+        v-model="formData.emp_address"
       />
       <br />
       <label for="contact" class="font-semibold p-1">Contact No:</label>
@@ -79,7 +78,7 @@
         name="contact"
         placeholder="Enter the contact no"
         class="border-2 border-black m-1"
-        v-model="emp_contact"
+        v-model="formData.emp_contact"
       />
       <br />
       <label for="salary" class="font-semibold p-1">Salary:</label>
@@ -89,7 +88,7 @@
         name="salary"
         placeholder="Enter the salary"
         class="border-2 border-black m-1"
-        v-model="emp_salary"
+        v-model="formData.emp_salary"
       />
       <br />
       <label for="dept" class="font-semibold p-1">Department:</label>
@@ -99,7 +98,7 @@
         name="dept"
         placeholder="Enter the department"
         class="border-2 border-black m-1"
-        v-model="emp_dept"
+        v-model="formData.emp_dept"
       />
       <br />
       <button
@@ -121,7 +120,7 @@
       <button type="button">Edit</button>
     </form>
 
-    <table
+    <!-- <table
       class="table-auto border-2 border-black mt-4 place-items-center"
       :item="items"
     >
@@ -181,109 +180,43 @@
               Delete
             </button>
           </td>
-          <!-- <td></td> -->
-        </tr>
+          <td></td> 
+    </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
-show: true;
-
-// editEmp();
-const emp_id = ref("");
-const emp_name = ref("");
-const emp_gender = ref("");
-const emp_address = ref("");
-const emp_contact = ref("");
-const emp_salary = ref("");
-const emp_dept = ref("");
-
-let state = reactive({
-  items: [],
-
-  form: {
-    emp_id: "",
-    emp_name: "",
-    emp_gender: "",
-    emp_address: "",
-    emp_contact: "",
-    emp_salary: "",
-    emp_dept: "",
-  },
+import { reactive } from "vue";
+import useValidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
+const formData = reactive({
+  emp_name: "",
+  emp_gender: "",
+  emp_address: "",
+  emp_contact: "",
+  emp_salary: "",
+  emp_dept: "",
 });
 
-getAllEmp();
-// GET API
-async function getAllEmp() {
-  state.items = await $fetch("http://localhost:3003/employees");
-}
+const valid = {
+  emp_name: { required },
+  emp_gender: { required },
+  emp_address: { required },
+  emp_contact: { required },
+  emp_salary: { required },
+  emp_dept: { required },
+};
 
-async function saveEmpData() {
-  console.log("we are in post", emp_id.value);
-  const sampleData = {
-    emp_id: null,
-    emp_name: emp_name.value,
-    emp_gender: emp_gender.value,
-    emp_address: emp_address.value,
-    emp_contact: emp_contact.value,
-    emp_salary: emp_salary.value,
-    emp_dept: emp_dept.value,
-  };
-  const response = await $fetch("http://localhost:3003/employees", {
-    method: "POST",
-    body: JSON.stringify(sampleData),
-  });
-  getAllEmp();
+const v$ = useValidate(valid, formData);
 
-  async function getspecificuser() {
-    console.log(emp_id);
-    const response = await $fetch(
-      "http://localhost:3003/employees/" + emp_id.value
-    );
-    state.items = [response];
+const formSubmit = async () => {
+  const result = await v$.value.$validate();
+  if (result) {
+    alert("success");
+  } else {
+    alert("error");
   }
-
-  async function editEmp(emp) {
-    console.log("editamp is used");
-    this.emp_id = employees.emp_id;
-    this.emp_name = employees.emp_name;
-    this.emp_gender = employees.emp_gender;
-    this.emp_address = employees.emp_address;
-    this.emp_contact = employees.emp_contact;
-    this.emp_salary = employees.emp_salary;
-    this.emp_dept = employees.emp_dept;
-  }
-}
-
-async function onEdit(id: number) {
-  const response = await $fetch("http://localhost:3003/employees/" + id, {
-    method: "PUT",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      emp_id: emp_id.value,
-      emp_name: emp_name.value,
-      emp_gender: emp_gender.value,
-      emp_address: emp_address.value,
-      emp_contact: emp_contact.value,
-      emp_salary: emp_salary.value,
-      emp_dept: emp_dept.value,
-    }),
-  });
-  console.log(response);
-  getAllEmp();
-}
-
-// Delete API
-async function onDelete(id: number) {
-  await $fetch("http://localhost:3003/employees/" + id, {
-    method: "DELETE",
-  });
-  getAllEmp();
-}
+};
 </script>
