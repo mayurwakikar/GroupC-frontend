@@ -30,7 +30,7 @@
         name="eid"
         placeholder="Enter the employee id"
         class="border-2 border-black m-1"
-        v-model="emp_id"
+        v-model="data.empData.emp_id"
         v-show="show"
       /><br />
       <label for="fname" class="font-semibold p-1">Name:</label>
@@ -40,14 +40,14 @@
         name="fname"
         placeholder="Enter the name"
         class="border-2 border-black m-1"
-        v-model="emp_name"
+        v-model="data.empData.emp_name"
       /><br />
       <label class="font-semibold p-1">Gender:</label>
       <input
         type="radio"
         id="male"
         name="gender"
-        v-model="emp_gender"
+        v-model="data.empData.emp_gender"
         value="male"
         class="m-1"
       />
@@ -58,7 +58,7 @@
         name="gender"
         value="female"
         class="m-1"
-        v-model="emp_gender"
+        v-model="data.empData.emp_gender"
       />
       <label for="female">Female</label>
       <br />
@@ -69,7 +69,7 @@
         name="address"
         placeholder="Enter the address"
         class="border-2 border-black m-1"
-        v-model="emp_address"
+        v-model="data.empData.emp_address"
       />
       <br />
       <label for="contact" class="font-semibold p-1">Contact No:</label>
@@ -79,7 +79,7 @@
         name="contact"
         placeholder="Enter the contact no"
         class="border-2 border-black m-1"
-        v-model="emp_contact"
+        v-model="data.empData.emp_contact"
       />
       <br />
       <label for="salary" class="font-semibold p-1">Salary:</label>
@@ -89,7 +89,7 @@
         name="salary"
         placeholder="Enter the salary"
         class="border-2 border-black m-1"
-        v-model="emp_salary"
+        v-model="data.empData.emp_salary"
       />
       <br />
       <label for="dept" class="font-semibold p-1">Department:</label>
@@ -99,7 +99,7 @@
         name="dept"
         placeholder="Enter the department"
         class="border-2 border-black m-1"
-        v-model="emp_dept"
+        v-model="data.empData.emp_dept"
       />
       <br />
       <button
@@ -189,18 +189,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import useVuelidate from "@vuelidate/core";
+// import { ref } from "vue";
+import { reactive } from "vue";
+import { required } from "@vuelidate/validators";
 
-show: true;
+// show: true;
 
-// editEmp();
-const emp_id = ref("");
-const emp_name = ref("");
-const emp_gender = ref("");
-const emp_address = ref("");
-const emp_contact = ref("");
-const emp_salary = ref("");
-const emp_dept = ref("");
+let data = reactive({
+  empData: {
+    emp_id: null,
+    emp_name: "",
+    emp_gender: "",
+    emp_address: "",
+    emp_contact: "",
+    emp_salary: "",
+    emp_dept: "",
+  },
+});
+
+const valid = {
+  emp_name: { required },
+  emp_gender: { required },
+  emp_address: { required },
+  emp_contact: { required },
+  emp_salary: { required },
+  emp_dept: { required },
+};
+
+// let emp = "";
+const v$ = useVuelidate(valid, data.empData);
 
 let state = reactive({
   items: [],
@@ -213,40 +231,45 @@ async function getAllEmp() {
 }
 
 async function saveEmpData() {
-  console.log("we are in post", emp_id.value);
-  const sampleData = {
-    emp_id: null,
-    emp_name: emp_name.value,
-    emp_gender: emp_gender.value,
-    emp_address: emp_address.value,
-    emp_contact: emp_contact.value,
-    emp_salary: emp_salary.value,
-    emp_dept: emp_dept.value,
-  };
-  const response = await $fetch("http://localhost:3003/employees", {
-    method: "POST",
-    body: JSON.stringify(sampleData),
-  });
-  getAllEmp();
+  console.log("we are in post", data.empData.emp_id);
 
-  async function getspecificuser() {
-    console.log(emp_id);
-    const response = await $fetch(
-      "http://localhost:3003/employees/" + emp_id.value
-    );
-    state.items = [response];
-  }
+  const result = await v$.value.$validate();
 
-  async function editEmp(emp) {
-    console.log("editamp is used");
-    this.emp_id = employees.emp_id;
-    this.emp_name = employees.emp_name;
-    this.emp_gender = employees.emp_gender;
-    this.emp_address = employees.emp_address;
-    this.emp_contact = employees.emp_contact;
-    this.emp_salary = employees.emp_salary;
-    this.emp_dept = employees.emp_dept;
+  if (result) {
+    const sampleData = {
+      emp_id: null,
+      emp_name: data.empData.emp_name,
+      emp_gender: data.empData.emp_gender,
+      emp_address: data.empData.emp_address,
+      emp_contact: data.empData.emp_contact,
+      emp_salary: data.empData.emp_salary,
+      emp_dept: data.empData.emp_dept,
+    };
+    const response = await $fetch("http://localhost:3003/employees", {
+      method: "POST",
+      body: JSON.stringify(sampleData),
+    });
+    getAllEmp();
+  } else {
+    alert("Data ache se daalo warna mat daalo");
   }
+}
+
+async function getspecificuser(id: number) {
+  // console.log(emp_id);
+  const response = await $fetch("http://localhost:3003/employees/" + id);
+  state.items = [response];
+}
+
+async function editEmp(emp) {
+  console.log("editamp is used");
+  this.emp_id = employees.emp_id;
+  this.emp_name = employees.emp_name;
+  this.emp_gender = employees.emp_gender;
+  this.emp_address = employees.emp_address;
+  this.emp_contact = employees.emp_contact;
+  this.emp_salary = employees.emp_salary;
+  this.emp_dept = employees.emp_dept;
 }
 
 async function onEdit(id: number) {
