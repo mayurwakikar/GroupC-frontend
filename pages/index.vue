@@ -216,16 +216,16 @@ async function deletespecificuser(book_id) {
 }
 
 //get specific user
-
-async function getspecificbook() {
-  console.log(book_id);
-  const response = await $fetch("http://localhost:3003/book/" + book_id);
+async function getspecificbook(book) {
+  console.log(book.book_id);
+  const response = await $fetch("http://localhost:3003/book/" + book.book_id);
   state.items = [response];
+  console.log(state.items);
 }
 getalldata();
 
 async function editBook(book) {
-  (formData.book_id = book.book_id),
+    (formData.book_id = book.book_id),
     (formData.book_name = book.book_name),
     (formData.book_author= book.book_author),
     (formData.book_image = book.book_image),
