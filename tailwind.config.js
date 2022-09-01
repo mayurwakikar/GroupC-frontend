@@ -26,7 +26,6 @@
 //   },
 //   plugins: [],
 // };
-
 module.exports = {
   content: [
     "./components/**/*.{js,vue,ts}",
