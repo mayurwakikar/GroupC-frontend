@@ -159,12 +159,7 @@
         </tr>
       </table>
     </div>
-    <!-- <p>
-      {{ mydata.product.statusCode }}
-      </div> -->
-      <!-- <p>{{ allProduct }}<//p> -->
-    <!-- </p>
-    <p>{{ message }}</p> --> 
+   
   </div>
 </template>
 <script setup lang="ts">
@@ -187,18 +182,10 @@ const mydata = reactive({
     price: "",
     stock: "",
     size: "",
-    // emp_contact: '',
-    // emp_salary: '',
-    // emp_dept: '',
+   
   },
 });
-// const rules = {
-//   productName: { required },
-//   price: { required },
-//   stock: { required },
-//   size: { required },
-//   //   //password: { required },
-// };
+
 const rules = computed(() => {
   return {
     productName: {
@@ -244,24 +231,6 @@ async function onFormSubmit1() {
   }
   getProductAPI();
 }
-// async function onFormSubmit1() {
-//   const result = await v$.value.$validate();
-//   if (isEdit === true) {
-//     await $fetch("http://localhost:8080/product/" + id,  {
-//       method: "PUT",
-//       body: mydata.Book,
-//     });
-//     isEdit = false;
-//     getBookAPI();
-//   } else {
-//     if (result) {
-//       await $fetch("http://localhost:8080/product", {
-//         method: "POST",
-//         body: mydata.Book,
-//       });
-//       getUserApi();
-//     }
-//   }
 // // PATCH API
 async function editProduct(id) {
   console.log("console from patch api");
