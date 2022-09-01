@@ -7,33 +7,51 @@
                     <h2 class="text-teal-900  text-center font-bold text-4xl pt-6">Student Registration</h2>
                     <hr />
                     <br />
-                    <label class="font-bold  text-xl" for="id">id:</label>
-                    <input type="text" class="  border-black rounded-lg border-2" v-model="id" id="firstname" name="firstname" placeholder="Enter your id" />
+                    <!-- <label class="font-bold  text-xl" for="id">id:</label>
+                    <input type="text" class="  border-black rounded-lg border-2" v-model="sampleData.id"  id="firstname" name="firstname" placeholder="Enter your id" /> -->
                     <label class="font-bold  text-xl" for="firstname">First name:</label>
-                    <input type="text" class="  border-black rounded-lg border-2" v-model="firstname" id="firstname" name="firstname" placeholder="Enter your first name" />
+                    <input type="text" class="  border-black rounded-lg border-2" v-model="sampleData.firstname"  id="firstname" name="firstname" placeholder="Enter your first name" />
+                    <span v-for="error in v$.firstname.$errors" :key="error.$uid" class="text-red-500">{{ error.$message }}</span>
                     <label class="font-bold text-xl pt-3" for="lastname">Last name:</label>
-                    <input type="text" class="  border-black rounded-lg border-2"  v-model="lastname" id="lastname" name="lastname" placeholder="Enter your Last name" />
+                    <input type="text" class="  border-black rounded-lg border-2" v-model="sampleData.lastname" id="lastname" name="lastname" placeholder="Enter your Last name" />
+                    <span v-for="error in v$.lastname.$errors" :key="error.$uid" class="text-red-500">{{ error.$message }}</span>
                     <label class="font-bold text-xl pt-3" for="email">Email Id: </label>
-                    <input type="email" class="  border-black rounded-lg border-2"  v-model="email" id="email" name="email" placeholder="Enter your Email id" />
-                    <label class="font-bold text-xl pt-3" for="mobile">Phone Number: </label>
-                    <input type="number" class="  border-black rounded-lg border-2"  v-model="mobile" id="mobile" name="mobile" placeholder="Enter your number" />
+                    <input type="email" class="  border-black rounded-lg border-2" v-model="sampleData.email" id="email" name="email" placeholder="Enter your Email id" />
+                    <span v-for="error in v$.email.$errors" :key="error.$uid" class="text-red-500">{{ error.$message }}</span>
                     <label class="font-bold text-xl pt-3" for="address">Address: </label>
-                    <input type="text" class="  border-black rounded-lg border-2" id="address" v-model="address"  name="address" placeholder="Enter your Address" />
+                    <input type="text" class="  border-black rounded-lg border-2" id="address" v-model="sampleData.address" name="address" placeholder="Enter your Address" />
+                    <span v-for="error in v$.address.$errors" :key="error.$uid" class="text-red-500">{{ error.$message }}</span>
                     <!-- <div class="pt-3"> -->
                     <!-- </div> -->
-                    <div class="text-center pt-10">
-                        <button class="py-2 px-10 mr-5 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md mb-3" type="submit" @click="editStudentApi">update </button>
-                        <button class="py-2 px-10 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md mb-3" @click="save" onclick="save()"> Add </button>
-                        <button class="py-2 px-10 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md mb-3"  @click="getalldata" onclick="getallstudent()"> Get All Data</button>
-                      <label class="font-bold  text-xl" for="id">id:</label>
-                      <input type="text" class="  border-black rounded-lg border-2" v-model="id" id="firstname" name="firstname" placeholder="Enter your id" />
+               
+       
+    
+
+                    <div class=" flex text-center pt-10 space-x-4">
+                        <!-- <button class="py-2 px-10 mr-5 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md mb-3" type="submit" @click="editStudentApi">update </button> -->
+                        <button class="py-2 px-10 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md space-x-4 mb-3" type="submit" @click="onSubmitForm()">submit </button>
+                        <button class="py-2 px-10 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md mb-3" type="reset">Reset </button>
+                        <!-- <button class="py-2 px-10 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md mb-3" @click="getalldata" onclick="getallstudent()"> Get All Data</button> -->
+                        <!-- <label class="font-bold  text-xl" for="id">id:</label>
+                        <input type="text" class="  border-black rounded-lg border-2" v-model="id" id="firstname" name="firstname" placeholder="Enter your id" /> -->
+                    <!-- </div> -->
+                    <!-- <div class="mt-4"> -->
+                        <!-- <p class="text-red-500">Errors:</p>
+            <span v-for="error in v$.$errors" :key="error.$uid">
+              {{ error.$property }} - {{ error.$message }}
+              </span>-->
                     </div>
-                    <button class="py-2 px-10 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md mb-3"  @click="getspecificstudent" onclick="getspecificstudent()"> GetspecificStudent</button>
-                </table>
-            </form>
+    
+
+
+
+                    <!-- <button class="py-2 px-10 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md mb-3" @click="getspecificstudent" onclick="getspecificstudent()"> GetspecificStudent</button> -->
+            </table>
+          </form> 
+        </div> 
         </div>
         <br>
-        <div >
+        <div>
             <table item="items" id="showdata" class="list bg-white-100">
                 <h1 class="text-teal-900 text-xl font-bold pt-1">DataBase table:</h1>
                 <tr>
@@ -41,108 +59,189 @@
                     <th class="px-4 border-black rounded-lg border-2">First Name</th>
                     <th class="px-4 border-black rounded-lg border-2">Last Name</th>
                     <th class="px-4 border-black rounded-lg border-2">Email Id</th>
-                    <th class="px-4 border-black rounded-lg border-2">Phone no</th>
+
                     <th class="px-4 border-black rounded-lg border-2">Address</th>
                     <th class="px-4 border-black rounded-lg border-2">Action</th>
                 </tr>
-                <tr v-for="item in state.items" :key="item">
+                <tr v-for="item of State.allStud" :key="item.id">
                     <td class="px-4 border-black rounded-lg border-2">{{item.id}}</td>
                     <td class="px-4 border-black rounded-lg border-2">{{item.firstname}}</td>
                     <td class="px-4 border-black rounded-lg border-2">{{item.lastname}}</td>
                     <td class="px-4 border-black rounded-lg border-2">{{item.email}}</td>
-                    <td class="px-4 border-black rounded-lg border-2">{{item.mobile}}</td>
+
                     <td class="px-4 border-black rounded-lg border-2">{{item.address}}</td>
-                    <button class="py-1 px-5 mr-5 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md " type="delete" @click="deletespecificstudent(item.id)"> Delete </button>
-                    <button class="py-1 px-5 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md" type="edit"  @click="editStudent(item)"> Edit </button>
+                    <button class="py-1 px-5 mr-5 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md "     @click="onDeleteOfStudent(item.id)"> Delete </button>
+                    <button class="py-1 px-5 bg-blue-500 hover:bg-blue-700 text-white font-bold text-center rounded-md" @click="onClickOfEditStudent(item.id)"> Edit </button>
                 </tr>
             </table>
+         
         </div>
-    </div>
+    <!-- </div> -->
+  
 </main>
 </template>
 
-
-<script setup>
-import { ref } from "vue";
-
-const id = ref("");
-const firstname= ref("");
-const lastname = ref("");
-const email= ref("");
-const mobile = ref("");
-const address = ref("");
-let state = reactive({
-  
-  items: [],
+<script lang="ts">
+import useVuelidate, {
+    required,
+    minLength,
+    email,
+    alpha,
+    maxLength,
+} from "~/utils/vuelidate/useVuelidate";
+</script>
+<script lang="ts" setup>
+// import { required, minLength, between } from 'vuelidate/lib/validators';
+import {
+    reactive,
+    computed
+} from "vue";
+let Check1: any;
+let State = reactive({
+    select: true,
+    Submit: "submit",
+    allStud: [],
+    StudDetails: [],
+    id: "",
+    //errorBack: {},
 });
-getallstudent();
+let sampleData = reactive({
+    firstname: "",
+    lastname: "",
+    email: "",
+    address: "",
 
-async function getallstudent() {
-  state.items = await $fetch("http://localhost:3003/student");
-}
-async function save() {
-  console.log("we are in post", id.value);
-  const sampleData = {
-    id: id.value,
-    firstname: firstname.value,
-    lastname: lastname.value,
-    email: email.value,
-    mobile: mobile.value,
-    address: address.value,
+});
+const rules = computed(() => {
+    return {
+        firstname: {
+            required,
+            alpha,
+            minLength: minLength(3),
+            maxLength: maxLength(35),
+        },
+        lastname: {
+            required,
+            alpha,
+            minLength: minLength(6),
+            maxLength: maxLength(12),
+        },
 
+        email: {
+            required,
+            email
+        },
+        address: {
+            required
+        },
+    };
+});
+const v$ = useVuelidate(rules, sampleData);
+getStdAPI();
+// GET API
+async function getStdAPI() {
+    State.allStud = await $fetch("http://localhost:3003/student/");
+}
+async function clearData() {
+    sampleData.firstname = "";
+    sampleData.lastname = "";
+    sampleData.email = "";
+    sampleData.address = "";
 
+}
+// POST API
+async function onSubmitForm() {
+    const result = await v$.value.$validate();
+    event.preventDefault();
+    if (State.select === true) {
+        const response = await $fetch("http://localhost:3003/student/", {
+            method: "POST",
+            body: JSON.stringify(sampleData),
+        });
+        alert("data Added successfully...");
+    } else {
+        putData();
+        alert("data updated Successfully...");
+        State.Submit = "Submit";
+    }
+    getStdAPI();
+    clearData();
+    this.$nuxt.refresh();
+}
+// PATCH API
+async function onClickOfEditStudent(id) {
+    State.Submit = "Update";
+    State.select = false;
+    const studEdit: any = await $fetch(
+        "http://localhost:3003/student/" + id
+    );
+    State.id = studEdit.id;
+    console.log(State.id);
+    sampleData.firstname = studEdit.Firstname;
+    sampleData.lastname = studEdit.Lastame;
 
-    //    id: id.value,
-    // firstname: firstname.value,
-    // lastname: lastname.value,
-    // email: email.value,
-    // number: number.value,
-    // address: address.value,
-  };
-  const response = await $fetch("http://localhost:3003/student", {
-    method: "POST",
-    body: JSON.stringify(sampleData),
-  });
-  getallstudent();
+    sampleData.email = studEdit.email;
+    sampleData.address = studEdit.address;
+
 }
-//getspecific student
-async function getspecificstudent() {
-  console.log(id);
-  const response = await $fetch("http://localhost:3003/student/" + id.value);
-  state.items = [response];
+async function putData() {
+    const id = State.id;
+    const response = await $fetch(
+        "http://localhost:3003/student/" + id, {
+            method: "PATCH",
+            body: sampleData,
+        }
+    );
+    getStdAPI();
+    clearData();
 }
-//Delete Api
-async function deletespecificstudent(id) {
-  await $fetch("http://localhost:3003/student/" + id, {
-    method: "DELETE",
-  });
-  getallstudent();
+// Delete API
+async function onDeleteOfStudent(id) {
+    await $fetch("http://localhost:3003/student/" + id, {
+        method: "DELETE",
+    });
+    getStdAPI();
 }
-async function editStudent(student) {
-  (this.id = student.id),
-    (this.firstname= student.firstname),
-    (this.lastname = student.lastname),
-    (this.email= student.email),
-    (this.mobile= mobile.number),
-    (this.address = student.address);
+async function getSpecificStudent(check: string) {
+    console.log("abc");
+    if (check != null) {
+        State.StudDetails = State.allStud.filter((stdID) => {
+            let id1 = check.toString();
+            let id2 = stdID.id.toString();
+            let firstName1 = check.toLocaleLowerCase();
+            let firstName2 = stdID.firstName.toLocaleLowerCase();
+            let lastName1 = check.toLocaleLowerCase();
+            let lastName2 = stdID.lastName.toLocaleLowerCase();
+
+            let email1 = check.toString();
+            let email2 = stdID.email.toString();
+            let address1 = check.toString();
+            let address2 = stdID.address.toString();
+            if (
+                id2.startsWith(id1) ||
+                firstName2.startsWith(firstName1) ||
+                lastName2.startsWith(lastName1) ||
+
+                email2.startsWith(email1) ||
+                address2.startsWith(address1)
+            ) {
+                console.log(stdID);
+                return stdID;
+            }
+        });
+    }
+    if (check == "") {
+        State.StudDetails = State.allStud;
+    }
 }
-async function editStudentApi(student) {
-  
-  const response = await $fetch("http://localhost:3003/student/" + id.value, {
-    method: "PUT",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      id: id.value,
-    firstname: firstname.value,
-    lastname: lastname.value,
-    email: email.value,
-    mobile: mobile.value,
-    address: address.value,
-    }),
-  });
-  console.log(response);
-  getallstudent();
-}
+// const { error: backError, data: posts } = await useFetch(
+//   "http://localhost:3001/student-managment/",
+//   {
+//     method: "POST",
+//     body: JSON.stringify(sampleData),
+//   }
+// );
+// State.errorBack = backError;
+// console.log(backError);
+// console.log(posts);
 </script>
