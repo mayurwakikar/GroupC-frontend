@@ -130,12 +130,12 @@
         {{ error.$message }}
       </li>
       <br />
-      <label for="dept" class="font-semibold p-1">Department:</label>
+      <!-- <label for="dept" class="font-semibold p-1">Department:</label>
       <input
-        type="text"
+        type="number"
         id="dept"
         name="dept"
-        placeholder="Enter the department"
+        placeholder="Enter the Department"
         class="border-2 border-black m-1"
         v-model="data.empData.emp_dept"
       />
@@ -146,6 +146,29 @@
       >
         {{ error.$message }}
       </li>
+      <br /> -->
+
+      <label class="font-semibold p-1"> Select Department: </label>
+      <select
+        multiple
+        v-model="data.empData.emp_dept"
+        class="border-2 border-black m-1"
+      >
+        <option value="1">HR</option>
+        <option value="2">Research</option>
+        <option value="3">Development</option>
+        <option value="4">Marketing</option>
+        <option value="4">Finance</option>
+      </select>
+      <!-- <input type="submit" value="Submit" /> -->
+
+      <!-- <li
+        v-for="error in v$.emp_dept.$errors"
+        :key="error.$uid"
+        class="text-red-600"
+      >
+        {{ error.$message }}
+      </li> -->
       <br />
       <button
         class="bg-green-500 p-1 border-2 border-green-500 text-white rounded m-2"
@@ -260,9 +283,9 @@ const valid = {
   },
   emp_gender: { required },
   emp_address: { required },
-  emp_contact: { required, minLength: minLength(10), maxLength: maxLength(10) },
+  emp_contact: { required, minLength: minLength(9), maxLength: maxLength(10) },
   emp_salary: { required },
-  emp_dept: { required },
+  // emp_dept: { required },
 };
 
 // let emp = "";
@@ -324,7 +347,7 @@ async function saveEmpData(e) {
     });
     getAllEmp();
   } else {
-    alert("Data ache se daalo warna mat daalo");
+    alert("Enter the required field");
   }
 }
 
