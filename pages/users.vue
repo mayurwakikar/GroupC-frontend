@@ -1,44 +1,125 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+show: true;
+import useVuelidate from "@vuelidate/core";
+
+import {
+  required,
+  minLength,
+  maxLength,
+  maxValue,
+  alpha,
+} from "@vuelidate/validators";
+import { reactive } from "vue";
+// import { ref } from "vue";
 // how define multiple variable/ref in single reactive state
 // Access in html template
-const user_id = ref("");
-const email = ref("");
-const name = ref("");
-const gender = ref("");
-const mobile_number = ref("");
-const address = ref("");
+// const user_id = ref("");
+// const email = ref("");
+// const name = ref("");
+// const gender = ref("");
+// const mobile_number = ref("");
+// const address = ref("");
+
+let temp = reactive({
+  id: null,
+  role_name: "",
+});
+
+let data = reactive({
+  userData: {
+    user_id: null,
+    email: "",
+    name: "",
+    gender: "",
+    mobile_number: "",
+    address: {
+      id: null,
+      street: "",
+      city: "",
+      country: "",
+    },
+    roles: [],
+
+    // role_id: ""
+  },
+});
+async function roles() {}
+
+const rules = {
+  email: { required },
+  name: {
+    required,
+    minLength: minLength(6),
+    maxLength: maxLength(15),
+    alpha: alpha,
+  },
+  gender: { required },
+  mobile_number: { required },
+  // mobile_number: {
+  //   required,
+  //   minLength: minLength(10),
+  //   maxLength: maxLength(10),
+  // },
+  address: { required },
+};
+
+let user = "";
+const v$ = useVuelidate(rules, data.userData);
+
 let state = reactive({
   // allBooks: []
   items: [],
+  roles: [],
+  rolestore: [],
 });
+
 getalldata();
+
 // GET API
 async function getalldata() {
   state.items = await $fetch("http://localhost:3001/user");
 }
-async function save() {
-  console.log("we are in post", user_id.value);
-  const sampleData = {
-    user_id: user_id.value,
-    email: email.value,
-    name: name.value,
-    gender: gender.value,
-    mobile_number: mobile_number.value,
-    address: address.value,
-  };
-  const response = await $fetch("http://localhost:3001/user", {
-    method: "POST",
-    body: JSON.stringify(sampleData),
-  });
-  getalldata();
+getallroles();
+
+async function getallroles() {
+  state.roles = await $fetch("http://localhost:3001/role");
+}
+
+async function save(e) {
+  e.preventDefault();
+  console.log("we are in post", data.userData.user_id);
+  console.log("all data ", data.userData);
+
+  const result = await v$.value.$validate();
+
+  if (result) {
+    const sampleData = {
+      user_id: null,
+      // role_id: data.userData.role_id,
+      // state.roles.role_name:
+      email: data.userData.email,
+      name: data.userData.name,
+      gender: data.userData.gender,
+      mobile_number: data.userData.mobile_number,
+      address: data.userData.address,
+    };
+    const response = await $fetch("http://localhost:3001/user", {
+      method: "POST",
+      body: JSON.stringify(sampleData),
+    });
+    getalldata();
+  } else {
+    alert("error , form not submitted");
+  }
 }
 //getspecific user
-async function getspecificuser() {
-  console.log(user_id);
-  const response = await $fetch("http://localhost:3001/user/" + user_id.value);
+async function getspecificuser(user) {
+  console.log(+user);
+  console.log("get specific is called");
+  const response = await $fetch("http://localhost:3001/user/" + user);
   state.items = [response];
 }
+
 //Delete Api
 async function deletespecificuser(user_id) {
   await $fetch("http://localhost:3001/user/" + user_id, {
@@ -47,12 +128,12 @@ async function deletespecificuser(user_id) {
   getalldata();
 }
 async function editUser(user) {
-  (this.user_id = user.user_id),
-    (this.name = user.name),
-    (this.mobile_number = user.mobile_number),
-    (this.gender = user.gender),
-    (this.email = user.email),
-    (this.address = user.address);
+  this.user_id = user.user_id;
+  this.name = user.name;
+  this.mobile_number = user.mobile_number;
+  this.gender = user.gender;
+  this.email = user.email;
+  this.address = user.address;
 }
 async function editUserApi(user) {
   // const response = await fetch("http://localhost:3001/user/" + this.user_id, {
@@ -152,11 +233,10 @@ body {
       rel="stylesheet"
     /> -->
       <form method="POST" class="ml-40">
-        <div class="form bg-black items-center content-center">
+        <div class="form bg-black items-center content-center" v-show="show">
           <input
             type="text"
-            v-model="user_id"
-            name="name"
+            v-model="data.userData.user_id"
             autocomplete="off"
             required
             class="focus:border-blue-500"
@@ -165,25 +245,37 @@ body {
             <span class="content-name">User Id</span>
           </label>
         </div>
-        <div class="form bg-black">
-          <input
-            type="text"
-            v-model="name"
-            name="name"
-            autocomplete="on"
-            required
-            class="focus:border-blue-500"
-          />
-          <label for="name" class="label-name">
-            <span class="content-name">Name</span>
-          </label>
+        <div class="form bg-white">
+          <div>
+            <div>
+              <input
+                type="text"
+                v-model="data.userData.name"
+                id="name"
+                autocomplete="on"
+                required
+                class="focus:border-blue-500"
+              />
+              <label for="name" class="label-name">
+                <span class="content-name">Name</span>
+              </label>
+            </div>
+          </div>
         </div>
+
+        <li
+          v-for="error in v$.name.$errors"
+          :key="error.$uid"
+          class="text-red-600"
+        >
+          {{ error.$message }}
+        </li>
+
         <!-- <div> -->
         <div class="form bg-black">
           <input
             type="text"
-            v-model="gender"
-            name="name"
+            v-model="data.userData.gender"
             autocomplete="off"
             required
             class="focus:border-blue-500"
@@ -199,21 +291,48 @@ body {
         <div class="form bg-black">
           <input
             type="text"
-            v-model="address"
-            name="name"
+            v-model="data.userData.address.street"
             autocomplete="off"
             required
             class="focus:border-blue-500"
           />
+
           <label for="address" class="label-name">
-            <span class="content-name">Address</span>
+            <span class="content-name">Street</span>
+          </label>
+        </div>
+
+        <div class="form bg-black">
+          <input
+            type="text"
+            v-model="data.userData.address.city"
+            autocomplete="off"
+            required
+            class="focus:border-blue-500"
+          />
+
+          <label for="address" class="label-name">
+            <span class="content-name">City</span>
           </label>
         </div>
         <div class="form bg-black">
           <input
             type="text"
-            v-model="email"
-            name="name"
+            v-model="data.userData.address.country"
+            autocomplete="off"
+            required
+            class="focus:border-blue-500"
+          />
+
+          <label for="address" class="label-name">
+            <span class="content-name">Country</span>
+          </label>
+        </div>
+
+        <div class="form bg-black">
+          <input
+            type="text"
+            v-model="data.userData.email"
             autocomplete="off"
             required
             class="focus:border-blue-500"
@@ -225,8 +344,7 @@ body {
         <div class="form bg-black">
           <input
             type="number"
-            v-model="mobile_number"
-            name="name"
+            v-model="data.userData.mobile_number"
             autocomplete="off"
             required
             class="focus:border-blue-500"
@@ -235,12 +353,37 @@ body {
             <span class="content-name">Mobile</span>
           </label>
         </div>
+
+        <div>
+          <label> Select Roles </label>
+          <!-- <select multiple v-model="data.userData.role_id">
+            <option value="1">Accountant</option>
+            <option value="2">Engineer</option>
+            <option value="3">HR</option>
+            <option value="4">Bhodu</option>
+          </select> -->
+          <select multiple="true" v-model="state.rolestore">
+            <option
+              v-for="rol in state.roles"
+              :key="rol.id"
+              v-bind:value="rol.id"
+            >
+              <!-- v-bind:value="{{rol.id }}" -->
+              {{ rol.id }}) {{ rol.role_name }}
+            </option>
+            <!-- <option value="2">Engineer</option>
+            <option value="3">HR</option>
+            <option value="4">Bhodu</option> -->
+          </select>
+          {{ state.rolestore }}
+          <input type="submit" value="Submit" />
+        </div>
+
         <div class="mt-20 gap-6 mt-10 ml-5 m-4 p-4">
           <button
             class="font-bold py-2 px-4 ml-5 mr-5 rounded"
             type="button"
             @click="save"
-            onclick="save()"
           >
             Add
           </button>
@@ -252,12 +395,7 @@ body {
             Update
           </button>
           <label for="id">Your Id</label>
-          <input
-            class="p-1 border-2"
-            type="text"
-            v-model="user_id"
-            label="id"
-          />
+          <input class="p-1 border-2" type="text" v-model="user" label="id" />
           <button
             class="bg-sky-500 hover:bg-green-700 text-white font-bold py-2 px-4 ml-5 mr-5 rounded"
             type="button"
@@ -266,16 +404,20 @@ body {
           >
             Get All Data
           </button>
+
           <button
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-5 mr-5 rounded"
             type="button"
-            @click="getspecificuser"
-            onclick="getspecificuser()"
+            @click="getspecificuser(user)"
           >
             Get Specific User
           </button>
         </div>
       </form>
+
+      <div v-for="role in state.roles" :key="role.id">
+        {{ role }}
+      </div>
       <!--
     <div v-once v-show="show">
       {{ getalldata() }}
